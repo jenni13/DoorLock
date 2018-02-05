@@ -3,18 +3,18 @@
 
 //libraries used
 
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-#include <WiFiClient.h>
 #include <FS.h> //SPIFFS
 
+#include "Logger.h"
+#include "CommandManager.h"
 #include "ConfigManager.h"
-
-
-const char *ssid = "DOORLOCK001";
-const char *password = "password"; //at least 8 character long
+#include "ConnectionManager.h"
 
 bool config_is_defined = true;
+bool ota_ok = true;
+
 
 ConfigManagerClass configuration;
+ConnectionManagerClass connect;
+//CommandManagerClass CommandManager;
 #endif

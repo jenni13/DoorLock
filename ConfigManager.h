@@ -12,10 +12,10 @@ protected:
 
 public:
 	//void init();
-	bool readConfigFile();
+	String readConfigFile();
 	size_t getSize(File);
 	bool isEmpty(File);
-	void writeConfigFile();
+	void writeConfigFile(char*);
 };
 
 	//extern ConfigManagerClass ConfigManager;

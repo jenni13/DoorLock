@@ -1,9 +1,5 @@
-#include "ConfigManager.h"
+#include "DisplayManager.h"
 #include "Tools.h"
-
-
-const char *ssid_wifi = "SFR_6CD0";
-const char *password_wifi = "fa4rselutockervolder";
 
 ESP8266WebServer server(80);
 
@@ -12,55 +8,11 @@ ESP8266WebServer server(80);
 void handleRoot()
 {
 	server.send(200, "text/html", "<h1>Bienvenue sur DoorLock </h1>");
-}
-
-void modeAccessPoint()
-{
-	WiFi.mode(WIFI_AP); //only Access point. to do both -> (WiFi.mode(WIFI_AP_STA));
-	WiFi.softAP(ssid, password);
-	Serial.println();
-
-	Serial.print("Server IP address: ");
-	Serial.println(WiFi.softAPIP());
-
-	Serial.print("Server MAC address: ");
-	Serial.println(WiFi.softAPmacAddress());
+	String s = configuration.readConfigFile();
+	server.sendContent(s);
 
 	
 }
-
-void modeAccessPointAndWifi()
-{
-	WiFi.mode(WIFI_AP_STA);
-	
-	WiFi.softAP(ssid, password);
-	Serial.println();
-
-	Serial.print("Server IP address: ");
-	Serial.println(WiFi.softAPIP());
-
-	Serial.print("Server MAC address: ");
-	Serial.println(WiFi.softAPmacAddress());
-
-
-	WiFi.begin(ssid_wifi, password_wifi);
-	Serial.println("");
-
-	// Wait for connection
-	while (WiFi.status() != WL_CONNECTED) 
-	{
-		delay(500);
-		Serial.print(".");
-	}
-
-	//If connection successful show IP address in serial monitor
-	Serial.println("");
-	Serial.print("Connected to ");
-	Serial.println(ssid_wifi);
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
-}
-
 
 /****/
 
@@ -68,13 +20,26 @@ void setup()
 {
 	Serial.begin(115200);
 
+	/* a decommenter quand il y aura l'ecran
+	display.init();
+	display.setContrast(255);
+	display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
+	display.setFont(ArialMT_Plain_16);
+	display.drawString(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, "Initialisation\n");
+	display.display();
+	delay(10);*/
+
+
 	if (!config_is_defined) // mode access point only
 	{
-		modeAccessPoint();
+		connect.modeAccessPoint();
+		//CommandManager.WritePCF8574(0xFF);
+	
+		
 	}
 	else // wifi appairage and access point
 	{
-		modeAccessPointAndWifi();
+		connect.modeAccessPointAndWifi();		
 	}
 	server.on("/commande", handleRoot);
 	server.begin();
@@ -83,7 +48,7 @@ void setup()
 	/****SPIFFS***/
 	
 	SPIFFS.begin();
-	configuration.writeConfigFile();
+	configuration.writeConfigFile("j'ai ecrits");
 
 
 
@@ -93,6 +58,7 @@ void loop()
 {
 	
 	server.handleClient();
-	//configuration.readConfigFile(); //Test configuration.txt
+	//ArduinoOTA.handle();
+		
 
 }
