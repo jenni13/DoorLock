@@ -10,7 +10,7 @@
 #include "ConfigManager.h"
 #include "ConnectionManager.h"
 
-bool config_is_defined = true;
+
 bool ota_ok = true;
 
 

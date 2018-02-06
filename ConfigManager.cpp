@@ -1,14 +1,10 @@
 
 #include "ConfigManager.h"
 
-/*void ConfigManagerClass::init()
-{
-
-}*/
-
 String ConfigManagerClass::readConfigFile() // loading file if it exists
 {
-	File configFile = SPIFFS.open("/configuration.txt", "r");
+	
+	File configFile = SPIFFS.open(FILENAME, "r");
 	if (!configFile)
 	{
 		Serial.println("le chargement du fichier de configuration a échoué");
@@ -39,10 +35,27 @@ bool ConfigManagerClass::isEmpty(File filename)
 
 void ConfigManagerClass::writeConfigFile(char* modification )
 {
-	File configFile = SPIFFS.open("/configuration.txt", "w");
+	
+	File configFile = SPIFFS.open(this->filename, "w");
 	configFile.printf(modification);
 	configFile.close();
+	
+}
+
+bool ConfigManagerClass::itExist(const char* filename)
+{
+	if (SPIFFS.exists(filename))
+	{
+		Serial.println("il existe");
+		return true;
+	}
+	else
+	{
+		Serial.println("il n'existe pas");
+		return false;
+	}
 
 }
+
 
 

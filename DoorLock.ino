@@ -10,8 +10,6 @@ void handleRoot()
 	server.send(200, "text/html", "<h1>Bienvenue sur DoorLock </h1>");
 	String s = configuration.readConfigFile();
 	server.sendContent(s);
-
-	
 }
 
 /****/
@@ -29,12 +27,13 @@ void setup()
 	display.display();
 	delay(10);*/
 
-
-	if (!config_is_defined) // mode access point only
+	
+	if (!configuration.itExist(FILENAME)) // mode access point only
 	{
 		connect.modeAccessPoint();
 		//CommandManager.WritePCF8574(0xFF);
-	
+		/*if (ota_ok)
+			connect.modeOta();*/
 		
 	}
 	else // wifi appairage and access point
@@ -49,7 +48,8 @@ void setup()
 	
 	SPIFFS.begin();
 	configuration.writeConfigFile("j'ai ecrits");
-
+	if (configuration.itExist(FILENAME))
+		Serial.println("creation ok");
 
 
 }
