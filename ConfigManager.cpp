@@ -1,18 +1,23 @@
 
 #include "ConfigManager.h"
 
+
 String ConfigManagerClass::readConfigFile() // loading file if it exists
 {
 	
 	File configFile = SPIFFS.open(FILENAME, "r");
+	String s;
 	if (!configFile)
 	{
 		Serial.println("le chargement du fichier de configuration a échoué");
-		//return false;
-	}
-	String s = configFile.readString();
-	Serial.println(s);
 
+	}
+	while (configFile.available())
+	{
+		s = configFile.readString();
+		
+		Serial.println(s);
+	}
 	configFile.close();
 
 	return s;
@@ -25,26 +30,151 @@ size_t ConfigManagerClass::getSize(File filename)
 	return size;
 }
 
-bool ConfigManagerClass::isEmpty(File filename)
-{
-	if (filename.size() == 0)
-		return true;
-	else
-		return false;
-}
 
-void ConfigManagerClass::writeConfigFile(char* modification )
+
+/*void ConfigManagerClass::writeConfigFile(char* modification )
 {
 	
 	File configFile = SPIFFS.open(this->filename, "w");
 	configFile.printf(modification);
 	configFile.close();
 	
+}*/
+void ConfigManagerClass::writeConfigFile(String key, String value)
+{
+	/*String s, res;
+
+	//Serial.println("position = " + position);
+	if (keyExist(key))
+	{
+		File configFile = SPIFFS.open(FILENAME, "r+");
+		if (!configFile)
+		{
+			Serial.println("le chargement du fichier de configuration a echoue write");
+
+		}
+
+		while (configFile.available())
+		{
+			s = configFile.readStringUntil(':');
+
+			Serial.println("s:" + s + " value: " + value);
+			if (s == key)
+			{
+
+				res = configFile.readStringUntil('\n');
+				configFile.seek(configFile.position() - 1, SeekSet);
+				Serial.println("RES " + res);
+				configFile.print(value + '.' + index.at(key) + ':');
+				index[key] = index[key] + 1;
+
+			}
+			else
+			{
+				Serial.println("je suis perdu");
+
+			}
+
+		}
+		configFile.close();
+	}
+	else
+	{
+
+		File configFile = SPIFFS.open(FILENAME, "a");
+		if (!configFile)
+		{
+			Serial.println("le chargement du fichier de configuration a echoue write");
+
+		}
+		Serial.println("key = " + key);
+		index[key] = 1;
+		//configFile.println();
+		if (configFile.size() == 0)
+		{
+
+			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
+			index[key] = index[key] + 1;
+		}
+		else
+		{
+			res = configFile.readStringUntil('\n');
+			Serial.println("RES " + res);
+			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
+			index[key] = index[key] + 1;
+		}
+
+
+		configFile.close();
+
+
+	}*/
+	String s,res;
+	if (keyExist(key))
+	{
+		File configFile = SPIFFS.open(FILENAME, "r+");
+		if (!configFile)
+		{
+			Serial.println("le chargement du fichier de configuration a echoue write");
+		}
+
+		while (configFile.available())
+		{
+			s = configFile.readStringUntil('\n');
+			res = s.substring(0, s.indexOf(':'));
+			int position = configFile.position();
+				if (res == key)
+				{
+					
+					//s = configFile.readString();
+					//Serial.println("s cle ok = " + s + "value : " + value);
+					res = configFile.readString();
+					//Serial.println("res cle ok = " + res);
+
+					//int position = configFile.position();
+					configFile.seek(position-1, SeekSet);
+					configFile.print(value + '.' + index.at(key) + ':'+ '\n' + res);
+					index[key] = index[key] + 1;
+					
+					
+					
+				}
+		}
+		configFile.close();
+		
+	}
+	else
+	{
+		index[key] = 1;
+		File configFile = SPIFFS.open(FILENAME, "a");
+		if (!configFile)
+		{
+			Serial.println("le chargement du fichier de configuration a echoue write");
+
+		}
+		if (configFile.size() == 0)
+		{
+			configFile.println(key + ":"+ value + '.' + index.at(key) + ':');
+			//configFile.print(value + '.' + index.at(key) + ':');
+			index[key] = index[key] + 1;
+			configFile.close();
+
+		}
+		else
+		{
+			configFile.println();
+			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
+			//configFile.print(value + '.' + index.at(key) + ':');
+			index[key] = index[key] + 1;
+			configFile.close();
+		}
+
+	}
 }
 
-bool ConfigManagerClass::itExist(const char* filename)
+bool ConfigManagerClass::itExist()
 {
-	if (SPIFFS.exists(filename))
+	if (SPIFFS.exists(FILENAME)== true)
 	{
 		Serial.println("il existe");
 		return true;
@@ -57,5 +187,45 @@ bool ConfigManagerClass::itExist(const char* filename)
 
 }
 
+bool  ConfigManagerClass::keyExist(String key)
+{
+	for (std::map<String, int>::iterator it = index.begin(); it != index.end(); ++it)
+	{
+		if (it->first == key)
+		{
+			Serial.println("trouve");
+			return true;
+		}
+		
+	}
+	Serial.println("pas trouve");
+	return false;
+}
 
+void ConfigManagerClass::eraseKeyValue(String key)
+{
+	String s;
+	int position = this->keyExist(key);
+	
+	if (position == -1)
+	{
+		Serial.println("Clé ou fichier introuvable ");
+	}
+	else
+	{
+		File configFile = SPIFFS.open(FILENAME, "w");
+		configFile.seek(position, SeekSet);
+		s = configFile.readString();
+		s.remove(position);
+		configFile.close();
+
+	}
+}
+
+void ConfigManagerClass::formatConfigFile() //erase all the file
+{
+	
+	SPIFFS.format();
+	Serial.println("le fichier a ete formate");
+}
 

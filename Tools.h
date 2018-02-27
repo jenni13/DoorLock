@@ -11,8 +11,8 @@
 #include "ConnectionManager.h"
 
 
-bool ota_ok = true;
-
+bool ota_ok = false;
+bool clean = false;
 
 ConfigManagerClass configuration;
 ConnectionManagerClass connect;

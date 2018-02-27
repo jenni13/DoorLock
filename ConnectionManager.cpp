@@ -5,7 +5,7 @@
 #include "ConnectionManager.h"
 
 const char *ssid_wifi = "SFR_6CD0";
-const char *password_wifi = "a4rselutockervolder";
+const char *password_wifi = "fa4rselutockervolder";
 const char *ssid = "DOORLOCK001";
 const char *password = "password";  //at least 8 character long
 
@@ -68,7 +68,7 @@ void ConnectionManagerClass::modeAccessPointAndWifi()
 	}
 	else /*probleme connection, connect in AP mode only*/
 	{
-		Serial.println("La connection wifi a echoue, connection en mode AP uniquement en cours");
+		Serial.println("La connection wifi a echoue, connexion en mode AP uniquement en cours");
 		this->modeAccessPoint();
 	}
 
