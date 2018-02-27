@@ -42,73 +42,6 @@ size_t ConfigManagerClass::getSize(File filename)
 }*/
 void ConfigManagerClass::writeConfigFile(String key, String value)
 {
-	/*String s, res;
-
-	//Serial.println("position = " + position);
-	if (keyExist(key))
-	{
-		File configFile = SPIFFS.open(FILENAME, "r+");
-		if (!configFile)
-		{
-			Serial.println("le chargement du fichier de configuration a echoue write");
-
-		}
-
-		while (configFile.available())
-		{
-			s = configFile.readStringUntil(':');
-
-			Serial.println("s:" + s + " value: " + value);
-			if (s == key)
-			{
-
-				res = configFile.readStringUntil('\n');
-				configFile.seek(configFile.position() - 1, SeekSet);
-				Serial.println("RES " + res);
-				configFile.print(value + '.' + index.at(key) + ':');
-				index[key] = index[key] + 1;
-
-			}
-			else
-			{
-				Serial.println("je suis perdu");
-
-			}
-
-		}
-		configFile.close();
-	}
-	else
-	{
-
-		File configFile = SPIFFS.open(FILENAME, "a");
-		if (!configFile)
-		{
-			Serial.println("le chargement du fichier de configuration a echoue write");
-
-		}
-		Serial.println("key = " + key);
-		index[key] = 1;
-		//configFile.println();
-		if (configFile.size() == 0)
-		{
-
-			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
-			index[key] = index[key] + 1;
-		}
-		else
-		{
-			res = configFile.readStringUntil('\n');
-			Serial.println("RES " + res);
-			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
-			index[key] = index[key] + 1;
-		}
-
-
-		configFile.close();
-
-
-	}*/
 	String s,res;
 	if (keyExist(key))
 	{
@@ -126,18 +59,11 @@ void ConfigManagerClass::writeConfigFile(String key, String value)
 				if (res == key)
 				{
 					
-					//s = configFile.readString();
-					//Serial.println("s cle ok = " + s + "value : " + value);
 					res = configFile.readString();
-					//Serial.println("res cle ok = " + res);
-
-					//int position = configFile.position();
 					configFile.seek(position-1, SeekSet);
 					configFile.print(value + '.' + index.at(key) + ':'+ '\n' + res);
 					index[key] = index[key] + 1;
-					
-					
-					
+				
 				}
 		}
 		configFile.close();
@@ -155,7 +81,7 @@ void ConfigManagerClass::writeConfigFile(String key, String value)
 		if (configFile.size() == 0)
 		{
 			configFile.println(key + ":"+ value + '.' + index.at(key) + ':');
-			//configFile.print(value + '.' + index.at(key) + ':');
+
 			index[key] = index[key] + 1;
 			configFile.close();
 
@@ -164,7 +90,7 @@ void ConfigManagerClass::writeConfigFile(String key, String value)
 		{
 			configFile.println();
 			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
-			//configFile.print(value + '.' + index.at(key) + ':');
+
 			index[key] = index[key] + 1;
 			configFile.close();
 		}
