@@ -7,6 +7,8 @@
 #include <map>
 
 
+
+
 #define FILENAME "/configuration.cfg"
 
 
@@ -20,14 +22,16 @@ protected:
 public:
 
 	String readConfigFile();
+	String readValueConfigFile(String , String);
 	size_t getSize(File);
-	
-	//void writeConfigFile(char*);
 	void writeConfigFile(String key, String value);
 	bool itExist();
 	bool keyExist(String);
 	void eraseKeyValue(String);
 	void formatConfigFile();
+	std::map<String, int> getIndex();
+
+
 };
 
 	//extern ConfigManagerClass ConfigManager;

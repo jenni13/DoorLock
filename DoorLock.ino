@@ -51,24 +51,13 @@ void setup()
 	}
 	else
 	{
-		configuration.writeConfigFile("SSID", "abcdef");
-		Serial.println("lecture ssid 1:");
-		configuration.readConfigFile();
-		configuration.writeConfigFile("SSID", "ghij");
-		Serial.println("lecture ssid 2:");
-		configuration.readConfigFile();
-		configuration.writeConfigFile("NOM", "Jean");
-		/*if (configuration.itExist())
-			Serial.println("creation ok");*/
 		
+		configuration.writeConfigFile("SSID", "abcdef");
+		configuration.writeConfigFile("SSID", "ghij");
+		configuration.writeConfigFile("NOM", "Jean");
 		configuration.writeConfigFile("NOM", "Bono");
-		Serial.println("lecture nom:");
-		configuration.readConfigFile();
-
 		configuration.writeConfigFile("SSID", "klm");
-		Serial.println("lecture klm:");
-		configuration.readConfigFile();
-		configuration.writeConfigFile("NOM", "Jagger");
+		configuration.writeConfigFile("NOM", "Charly");
 		configuration.writeConfigFile("SSID", "opqr");
 		configuration.writeConfigFile("PWD", "passowr");
 		configuration.writeConfigFile("NOM", "dfgdfg");
@@ -76,7 +65,9 @@ void setup()
 		Serial.println("lecture fin:");
 		configuration.readConfigFile();
 
-		
+		Serial.println("Je cherche charly");
+		configuration.readValueConfigFile("NOM","3");
+
 	}
 	SPIFFS.end();
 }
