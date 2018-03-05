@@ -58,15 +58,24 @@ void setup()
 		configuration.writeConfigFile("NOM", "Bono");
 		configuration.writeConfigFile("SSID", "klm");
 		configuration.writeConfigFile("NOM", "Charly");
-		configuration.writeConfigFile("SSID", "opqr");
-		configuration.writeConfigFile("PWD", "passowr");
-		configuration.writeConfigFile("NOM", "dfgdfg");
+		configuration.writeConfigFile("PWD", "pass");
+
 
 		Serial.println("lecture fin:");
 		configuration.readConfigFile();
 
 		Serial.println("Je cherche charly");
 		configuration.readValueConfigFile("NOM","3");
+		Serial.println("effacer:");
+		configuration.eraseKeyConfigFile("SSID");
+
+		Serial.println("lecture fichier:");
+		configuration.readConfigFile();
+
+		configuration.eraseKeyConfigFile("PWD");
+
+		Serial.println("lecture fichier:");
+		configuration.readConfigFile();
 
 	}
 	SPIFFS.end();

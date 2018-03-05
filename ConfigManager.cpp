@@ -137,6 +137,46 @@ void ConfigManagerClass::writeConfigFile(String key, String value)
 	}
 }
 
+void ConfigManagerClass::eraseKeyConfigFile(String key)
+{
+	String s="", res,newFile="";
+	std::map<String, int>::iterator it;
+	if (keyExist(key))
+	{
+		File configFile = SPIFFS.open(FILENAME, "r+");
+		if (!configFile)
+		{
+			Serial.println("le chargement du fichier de configuration a echoue write");
+		}
+
+		while (configFile.available())
+		{
+			s = configFile.readStringUntil('\n');
+			res = s.substring(0, s.indexOf(':'));
+			int position = configFile.position();
+			if (res != key)
+			{
+				newFile += s+ "\n";
+			}
+			else
+				newFile = newFile;
+		}
+		
+		configFile.close();
+		for(it = index.begin(); it != index.end(); ++it)
+			if(it->first == key)
+				index.erase(it);
+
+		configFile = SPIFFS.open(FILENAME, "w");
+		configFile.println(newFile);
+		
+		configFile.close();
+
+		
+	}
+}
+
+
 bool ConfigManagerClass::itExist()
 {
 	if (SPIFFS.exists(FILENAME)== true)
