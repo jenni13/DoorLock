@@ -23,12 +23,11 @@ public:
 
 	String readConfigFile();
 	String readValueConfigFile(String , String);
-	void eraseKeyConfigFile(String key);
 	void writeConfigFile(String key, String value);
+	void deleteKeyConfigFile(String key);
+	size_t getSize(File);
 	bool itExist();
 	bool keyExist(String);
-	void eraseKeyValue(String);
-	size_t getSize(File);
 	void formatConfigFile();
 	std::map<String, int> getIndex();
 

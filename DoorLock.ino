@@ -66,15 +66,14 @@ void setup()
 
 		Serial.println("Je cherche charly");
 		configuration.readValueConfigFile("NOM","3");
-		Serial.println("effacer:");
-		configuration.eraseKeyConfigFile("SSID");
 
-		Serial.println("lecture fichier:");
+		configuration.deleteKeyConfigFile("SSID");
+		Serial.println("lecture fichier ssid supprime:");
 		configuration.readConfigFile();
 
-		configuration.eraseKeyConfigFile("PWD");
+		configuration.deleteKeyConfigFile("PWD");
 
-		Serial.println("lecture fichier:");
+		Serial.println("lecture fichier sans PWD:");
 		configuration.readConfigFile();
 
 	}

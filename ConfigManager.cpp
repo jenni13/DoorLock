@@ -2,7 +2,7 @@
 #include "ConfigManager.h"
 
 
-String ConfigManagerClass::readConfigFile() // reading file if it exists
+String ConfigManagerClass::readConfigFile() // reading all the file if it exists
 {
 	
 	File configFile = SPIFFS.open(FILENAME, "r");
@@ -74,14 +74,7 @@ String ConfigManagerClass::readValueConfigFile(String key, String numero ) // re
 
 }
 
-size_t ConfigManagerClass::getSize(File filename)
-{
-	size_t size = filename.size();
-
-	return size;
-}
-
-void ConfigManagerClass::writeConfigFile(String key, String value)
+void ConfigManagerClass::writeConfigFile(String key, String value) // isert un new key:value or a new value
 {
 	String s,res;
 	if (keyExist(key))
@@ -137,7 +130,7 @@ void ConfigManagerClass::writeConfigFile(String key, String value)
 	}
 }
 
-void ConfigManagerClass::eraseKeyConfigFile(String key)
+void ConfigManagerClass::deleteKeyConfigFile(String key) // erase key 
 {
 	String s="", res,newFile="";
 	std::map<String, int>::iterator it;
@@ -174,10 +167,21 @@ void ConfigManagerClass::eraseKeyConfigFile(String key)
 
 		
 	}
+	else
+	{
+		Serial.println("la cle que vous voulez supprime n existe pas ");
+	}
+}
+
+size_t ConfigManagerClass::getSize(File filename)
+{
+	size_t size = filename.size();
+
+	return size;
 }
 
 
-bool ConfigManagerClass::itExist()
+bool ConfigManagerClass::itExist() // test if the file exist in spiffs
 {
 	if (SPIFFS.exists(FILENAME)== true)
 	{
@@ -192,7 +196,7 @@ bool ConfigManagerClass::itExist()
 
 }
 
-bool  ConfigManagerClass::keyExist(String key)
+bool  ConfigManagerClass::keyExist(String key) // test if a key is in the index map
 {
 	for (std::map<String, int>::iterator it = index.begin(); it != index.end(); ++it)
 	{
@@ -204,27 +208,9 @@ bool  ConfigManagerClass::keyExist(String key)
 	return false;
 }
 
-void ConfigManagerClass::eraseKeyValue(String key)
-{
-	String s;
-	int position = this->keyExist(key);
-	
-	if (position == -1)
-	{
-		Serial.println("Clé ou fichier introuvable ");
-	}
-	else
-	{
-		File configFile = SPIFFS.open(FILENAME, "w");
-		configFile.seek(position, SeekSet);
-		s = configFile.readString();
-		s.remove(position);
-		configFile.close();
 
-	}
-}
 
-void ConfigManagerClass::formatConfigFile() //erase all the file
+void ConfigManagerClass::formatConfigFile() //delete the file
 {
 	SPIFFS.format();
 	Serial.println("le fichier a ete formate");
