@@ -1,3 +1,5 @@
+#include <ArduinoOTA.h>
+#include <dummy.h>
 #include "DisplayManager.h"
 #include "Tools.h"
 
@@ -65,7 +67,7 @@ void setup()
 		configuration.readConfigFile();
 
 		Serial.println("Je cherche charly");
-		configuration.readValueConfigFile("NOM","3");
+		configuration.readValueConfigFile("NOM",3);
 
 		configuration.deleteKeyConfigFile("SSID");
 		Serial.println("lecture fichier ssid supprime:");

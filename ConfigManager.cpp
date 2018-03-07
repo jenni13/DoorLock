@@ -23,7 +23,7 @@ String ConfigManagerClass::readConfigFile() // reading all the file if it exists
 	return s;
 }
 
-String ConfigManagerClass::readValueConfigFile(String key, String numero ) // read value from key and index
+String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read value from key and index
 {
 	std::map<String, int> map = getIndex();
 	File configFile = SPIFFS.open(FILENAME, "r+");
@@ -35,12 +35,12 @@ String ConfigManagerClass::readValueConfigFile(String key, String numero ) // re
 	String s,res,reponse;
 
 	/*conversion*/
-	int num = numero.toInt();
-	int precedent = num - 1;
+	
+	int precedent = numero - 1;
 	String m = String(precedent,DEC);
 
 	
-	if (num == 0 || num > map.at(key) )
+	if (numero == 0 || numero > map.at(key) )
 	{
 		reponse = "Mauvais index";
 		Serial.println(reponse);
@@ -54,7 +54,7 @@ String ConfigManagerClass::readValueConfigFile(String key, String numero ) // re
 		
 		if (res == key)
 		{
-			if (num != 1)
+			if (numero != 1)
 			{
 				res = s.substring(s.indexOf(m), s.indexOf(numero));
 				reponse = res.substring(res.indexOf(':') + 1, res.indexOf('.'));

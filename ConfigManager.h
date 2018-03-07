@@ -22,7 +22,7 @@ protected:
 public:
 
 	String readConfigFile();
-	String readValueConfigFile(String , String);
+	String readValueConfigFile(String , int);
 	void writeConfigFile(String key, String value);
 	void deleteKeyConfigFile(String key);
 	size_t getSize(File);
