@@ -33,10 +33,10 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 
 	}
 	String s,res,reponse;
-
+	bool ok = false;
 	/*conversion*/
 	
-	int precedent = numero - 1;
+	int precedent = numero-1;
 	String m = String(precedent,DEC);
 
 	
@@ -49,16 +49,29 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 
 	while (configFile.available())
 	{
-		s = configFile.readStringUntil('\n');
+		s = configFile.readStringUntil('\n');	
 		res = s.substring(0, s.indexOf(':'));
-		
+		s = s.substring(s.indexOf(':') + 1, s.length());
 		if (res == key)
 		{
 			if (numero != 1)
 			{
-				res = s.substring(s.indexOf(m), s.indexOf(numero));
-				reponse = res.substring(res.indexOf(':') + 1, res.indexOf('.'));
-				Serial.println(reponse);			
+				while (ok != true)
+				{
+
+					res = s.substring(s.indexOf('.') + 1, s.indexOf(':'));
+
+					if (res == m)
+					{
+						s = s.substring(s.indexOf(':')+1, s.length());
+						reponse = s.substring(0, s.indexOf('.'));
+						ok = true;
+					}
+					else
+					{
+						s = s.substring(s.indexOf(':')+1, s.length());
+					}
+				}
 			}
 			else
 			{
@@ -74,7 +87,7 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 
 }
 
-void ConfigManagerClass::writeConfigFile(String key, String value) // isert un new key:value or a new value
+void ConfigManagerClass::writeConfigFile(String key, String value) // insert un new key:value or a new value
 {
 	String s,res;
 	if (keyExist(key))
@@ -88,19 +101,21 @@ void ConfigManagerClass::writeConfigFile(String key, String value) // isert un n
 		while (configFile.available())
 		{
 			s = configFile.readStringUntil('\n');
+
 			res = s.substring(0, s.indexOf(':'));
 			int position = configFile.position();
-				if (res == key)
-				{	
-					res = configFile.readString();
-					configFile.seek(position-1, SeekSet);
-					configFile.print(value + '.' + index.at(key) + ':'+ '\n' + res);
-					index[key] = index[key] + 1;
-	
-				}
+			if (res == key)
+			{
+				res = configFile.readString();
+				configFile.seek(position-1, SeekSet);
+				configFile.print(":"+value + "." + index.at(key) + "\n" + res);
+
+				index[key] = index[key] + 1;
+
+			}
 		}
 		configFile.close();
-		
+
 	}
 	else
 	{
@@ -113,24 +128,26 @@ void ConfigManagerClass::writeConfigFile(String key, String value) // isert un n
 		}
 		if (configFile.size() == 0)
 		{
-			configFile.println(key + ":"+ value + '.' + index.at(key) + ':');
+			configFile.print(key + ":"+ value + "." + index.at(key) + ":");
 			index[key] = index[key] + 1;
 			configFile.close();
-	
+
 		}
 		else
 		{
 			configFile.println();
-			configFile.println(key + ":" + value + '.' + index.at(key) + ':');
+			configFile.print(key + ":" + value + "." + index.at(key) + ":");
 			index[key] = index[key] + 1;
 			configFile.close();
-			
+
 		}
+
 
 	}
 }
 
-void ConfigManagerClass::deleteKeyConfigFile(String key) // erase key 
+
+void ConfigManagerClass::deleteKeyConfigFile(String key) // erase key and all values of this key 
 {
 	String s="", res,newFile="";
 	std::map<String, int>::iterator it;
@@ -146,10 +163,9 @@ void ConfigManagerClass::deleteKeyConfigFile(String key) // erase key
 		{
 			s = configFile.readStringUntil('\n');
 			res = s.substring(0, s.indexOf(':'));
-			int position = configFile.position();
 			if (res != key)
 			{
-				newFile += s+ "\n";
+				newFile += s+ '\n';
 			}
 			else
 				newFile = newFile;
@@ -161,16 +177,75 @@ void ConfigManagerClass::deleteKeyConfigFile(String key) // erase key
 				index.erase(it);
 
 		configFile = SPIFFS.open(FILENAME, "w");
-		configFile.println(newFile);
-		
+		configFile.println(newFile);	
 		configFile.close();
-
-		
+	
 	}
 	else
 	{
 		Serial.println("la cle que vous voulez supprime n existe pas ");
 	}
+}
+
+void ConfigManagerClass::deleteValueConfigFile(String key, String value) // erase a value  
+{
+	String s,res,newFile,val;
+	std::vector <String> split;
+	int indice = 1;
+	bool erase_ok = false;
+
+	File configFile = SPIFFS.open(FILENAME, "r+");
+	if (!configFile)
+	{
+		Serial.println("le chargement du fichier de configuration a echoue write");
+	}
+
+	while (configFile.available())
+	{
+		s = configFile.readStringUntil('\n');
+	
+		Serial.println(s);
+		res = s.substring(0, s.indexOf(":"));
+		if (res == key)
+		{
+			newFile += res;
+			s = s.substring(s.indexOf(":")+1, s.length());
+
+			while (split.size() != index.at(key)-1)
+			{
+				val = s.substring(0, s.indexOf("."));
+				split.push_back(val);
+				s = s.substring(s.indexOf(":")+1, s.length());
+
+			}
+			for (std::vector<String>::iterator it = split.begin(); it != split.end(); ++it)
+			{
+				if (*it != value)
+				{
+					newFile += ":" + *it + "." + indice;
+					indice++;
+				}
+				else
+					erase_ok = true;
+			}
+			newFile += "\n";
+		}
+		else
+		{
+			newFile += s + "\n";
+		}
+
+	}
+	configFile.close();
+	if (!erase_ok)
+		Serial.println("la cle en entrée n existe pas, rien n a donc ete supprime");
+
+	index[key] = indice;
+	configFile = SPIFFS.open(FILENAME, "w");
+	configFile.println(newFile);
+
+	configFile.close();
+
 }
 
 size_t ConfigManagerClass::getSize(File filename)
@@ -183,7 +258,7 @@ size_t ConfigManagerClass::getSize(File filename)
 
 bool ConfigManagerClass::itExist() // test if the file exist in spiffs
 {
-	if (SPIFFS.exists(FILENAME)== true)
+	if (SPIFFS.exists(FILENAME))
 	{
 		Serial.println("il existe");
 		return true;

@@ -10,7 +10,7 @@
 #include <ArduinoOTA.h>
 
 //#include <ESP8266mDNS>
-// #include <ESP8266mDNS\ESP8266mDNS.h>
+
 
 
 
@@ -30,7 +30,7 @@ public:
 	void modeAccessPoint();
 	void modeAccessPointAndWifi();
 	String checkStatus(int);
-	//void modeOta();
+	void modeOta();
 
 
 };

@@ -40,7 +40,7 @@ void ConnectionManagerClass::modeAccessPointAndWifi()
 		Serial.print(".");
 		currentMillis = millis();
 		Serial.println(currentMillis - startMillis );
-		if (currentMillis - startMillis > 30000)
+		if (currentMillis - startMillis > 60000)
 		{
 			Serial.println(this->checkStatus(event));
 			break;
@@ -107,10 +107,13 @@ String ConnectionManagerClass::checkStatus(int event)
 	}
 }
 
-/*void ConnectionManagerClass::modeOta()
+void ConnectionManagerClass::modeOta()
 {
 	ArduinoOTA.setHostname(HOSTNAME);
 	ArduinoOTA.begin();
+	Serial.println("Ready");
+	Serial.print("IP address: ");
+	Serial.println(WiFi.localIP());
 	Logger.Log(F("Ota Appearing Ok..."));
-}*/
+}
 

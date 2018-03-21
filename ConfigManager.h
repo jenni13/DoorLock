@@ -3,9 +3,9 @@
 #ifndef _CONFIGMANAGER_h
 #define _CONFIGMANAGER_h
 
+#include <vector>
 #include <FS.h>
 #include <map>
-
 
 
 
@@ -23,8 +23,9 @@ public:
 
 	String readConfigFile();
 	String readValueConfigFile(String , int);
-	void writeConfigFile(String key, String value);
-	void deleteKeyConfigFile(String key);
+	void writeConfigFile(String, String);
+	void deleteKeyConfigFile(String);
+	void deleteValueConfigFile(String, String);
 	size_t getSize(File);
 	bool itExist();
 	bool keyExist(String);
