@@ -5,7 +5,7 @@
 #include "ConnectionManager.h"
 
 const char *ssid_wifi = "SFR_6CD0";
-const char *password_wifi = "fa4rselutockervolder";
+const char *password_wifi = "4rselutockervolder";
 const char *ssid = "DOORLOCK001";
 const char *password = "password";  //at least 8 character long
 

@@ -53,7 +53,7 @@ void setup()
 	else
 	{
 		/*test*/
-		/*configuration.writeConfigFile("SSID", "abcdef");
+		configuration.writeConfigFile("SSID", "abcdef");
 		configuration.writeConfigFile("SSID", "ghij");
 		configuration.writeConfigFile("NOM", "Jean");
 		configuration.writeConfigFile("NOM", "Bono");
@@ -72,7 +72,7 @@ void setup()
 		Serial.println("afficher del:");
 		configuration.readConfigFile();
 		Serial.println("Je cherche 2");
-		String reponse = configuration.readValueConfigFile("NUM",2);
+		String reponse = configuration.readValueConfigFile("NUM",1);
 		Serial.println(reponse);
 		configuration.deleteKeyConfigFile("SSID");
 		Serial.println("lecture fichier ssid supprime:");
@@ -81,7 +81,7 @@ void setup()
 		configuration.deleteKeyConfigFile("PWD");
 
 		Serial.println("lecture fichier sans PWD:");
-		configuration.readConfigFile();*/
+		configuration.readConfigFile();
 		
 	}
 	SPIFFS.end();

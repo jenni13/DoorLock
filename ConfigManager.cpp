@@ -77,7 +77,6 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 			{
 				res = s.substring(0, s.indexOf('.'));
 				reponse = res.substring(res.indexOf(':') + 1, res.indexOf('.'));
-				Serial.println(reponse);
 			}
 		}
 	}
