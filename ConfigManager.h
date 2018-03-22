@@ -31,6 +31,7 @@ public:
 	bool keyExist(String);
 	void formatConfigFile();
 	std::map<String, int> getIndex();
+	void initIndex();
 
 
 };

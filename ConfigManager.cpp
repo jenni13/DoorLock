@@ -150,6 +150,7 @@ void ConfigManagerClass::deleteKeyConfigFile(String key) // erase key and all va
 {
 	String s="", res,newFile="";
 	std::map<String, int>::iterator it;
+
 	if (keyExist(key))
 	{
 		File configFile = SPIFFS.open(FILENAME, "r+");
@@ -293,5 +294,36 @@ void ConfigManagerClass::formatConfigFile() //delete the file
 std::map<String, int> ConfigManagerClass::getIndex()
 {
 	return index;
+}
+
+void ConfigManagerClass::initIndex()
+{
+	File configFile = SPIFFS.open(FILENAME, "r");
+	String s,cle,val;
+	int value;
+	if (!configFile)
+	{
+		Serial.println("le chargement du fichier de configuration a échoué");
+
+	}
+	while (configFile.available())
+	{
+		s = configFile.readStringUntil('\n');
+
+
+		cle = s.substring(0, s.indexOf(':'));
+		val = s.substring(s.lastIndexOf('.') + 1, s.length());
+		value = val.toInt();
+		index[cle] = value+1;
+		
+	}
+	for (std::map<String, int>::iterator it = index.begin(); it != index.end(); ++it)
+	{
+		if (it->second == 1)
+		{
+			index.erase(it);
+		}
+
+	}
 }
 

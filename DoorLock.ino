@@ -30,6 +30,7 @@ void setup()
 	if (configuration.itExist()) // mode access point only
 	{
 		connect.modeAccessPointAndWifi();
+		configuration.initIndex();
 
 	}
 	else // wifi appairage and access point
@@ -53,7 +54,7 @@ void setup()
 	else
 	{
 		/*test*/
-		configuration.writeConfigFile("SSID", "abcdef");
+		/*configuration.writeConfigFile("SSID", "abcdef");
 		configuration.writeConfigFile("SSID", "ghij");
 		configuration.writeConfigFile("NOM", "Jean");
 		configuration.writeConfigFile("NOM", "Bono");
@@ -74,13 +75,14 @@ void setup()
 		Serial.println("Je cherche 2");
 		String reponse = configuration.readValueConfigFile("NUM",1);
 		Serial.println(reponse);
+
 		configuration.deleteKeyConfigFile("SSID");
 		Serial.println("lecture fichier ssid supprime:");
 		configuration.readConfigFile();
 
 		configuration.deleteKeyConfigFile("PWD");
 
-		Serial.println("lecture fichier sans PWD:");
+		Serial.println("lecture fichier sans PWD:");*/
 		configuration.readConfigFile();
 		
 	}
