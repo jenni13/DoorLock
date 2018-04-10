@@ -14,6 +14,11 @@ void LoggerClass::Log(char * logMessage, bool cr)
 	Output(logMessage);
 	if (cr)
 		linefeed();
+#elif defined(ARDUINO) && ACTIVELOG == 3
+	
+	toFile(logMessage);
+	if (cr)
+		linefeed();
 #endif
 }
 
@@ -29,6 +34,11 @@ void LoggerClass::Log(char logMessage, bool cr)
 	Output(&logMessage);
 	if (cr)
 		linefeed();
+#elif defined(ARDUINO) && ACTIVELOG == 3
+	Output(F("toFile"));
+	toFile(logMessage);
+	if (cr)
+		linefeed();
 #endif
 }
 
@@ -36,6 +46,7 @@ void LoggerClass::Log(char logMessage, bool cr)
 void LoggerClass::Log(String logMessage)
 {
 	Log(logMessage, true);
+
 }
 
 void LoggerClass::Log(String logMessage, bool cr)
@@ -44,8 +55,13 @@ void LoggerClass::Log(String logMessage, bool cr)
 	Output(logMessage);
 	if (cr)
 		linefeed();
+#elif defined(ARDUINO) && ACTIVELOG == 3
+	toFile(logMessage);
+	if (cr)
+		linefeed();
 #endif
 }
+
 
 // Error log with char* input
 void LoggerClass::Error(char * logMessage)
@@ -67,6 +83,7 @@ void LoggerClass::Error(char * logMessage, bool cr)
 void LoggerClass::Error(char logMessage)
 {
 	Error(logMessage, true);
+	
 }
 
 void LoggerClass::Error(char logMessage, bool cr)
@@ -123,6 +140,72 @@ bool LoggerClass::IsLogging()
 #else
 	return false;
 #endif
+}
+
+void LoggerClass::toFile(String message)
+{
+	String s;
+	int i = 0;
+	File ferror = SPIFFS.open(FILEERROR, "a+");
+	if (!ferror)
+	{
+		Serial.println("le chargement du fichier d erreur a echoue");
+	}
+	ferror.println(i+ '. ' + message);
+	i++;
+	ferror.println();
+	ferror.close();
+
+	
+}
+
+void LoggerClass::toFile(char* message)
+{
+	String s;
+	int i = 0;
+	File ferror = SPIFFS.open(FILEERROR, "a+");
+	if (!ferror)
+	{
+		Serial.println("le chargement du fichier d erreur a echoue");
+	}
+	ferror.println(i + '. ' + message);
+	i++;
+	ferror.println();
+	ferror.close();
+
+}
+void LoggerClass::toFile(char message)
+{
+	String s;
+	int i=0;
+	File ferror = SPIFFS.open(FILEERROR, "w");
+	if (!ferror)
+	{
+		Serial.println("le chargement du fichier d erreur a echoue");
+	}
+	ferror.println(message);
+	i++;
+	ferror.println();
+	ferror.close();
+
+}
+
+void LoggerClass::readFerror()
+{
+	String s;
+
+	File ferror = SPIFFS.open(FILEERROR, "r");
+	if (!ferror)
+	{
+		Serial.println("le chargement du fichier d'erreur a echoue");
+
+	}
+	while (ferror.available())
+	{
+		s = ferror.readString();	
+	}
+	Serial.println(s);
+	ferror.close();
 }
 
 LoggerClass Logger;

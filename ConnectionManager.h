@@ -3,6 +3,10 @@
 #ifndef _CONNECTIONMANAGER_h
 #define _CONNECTIONMANAGER_h
 
+#include "ConfigManager.h"
+#include "Logger.h"
+
+
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WiFiClient.h>
@@ -11,10 +15,6 @@
 
 //#include <ESP8266mDNS>
 
-
-
-
-#include "Logger.h"
 
 
 #define HOSTNAME "DOORLOCK001"
@@ -27,10 +27,13 @@ protected:
 
 public:
 
+	String selectSsid(ConfigManagerClass config, int);
+	String selectPwd(ConfigManagerClass config, int index);
 	void modeAccessPoint();
-	void modeAccessPointAndWifi();
+	void modeAccessPointAndWifi(String ssid,String pwd);
 	String checkStatus(int);
 	void modeOta();
+
 
 
 };

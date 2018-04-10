@@ -1,13 +1,20 @@
-// 
-// 
-// 
-
 #include "ConnectionManager.h"
 
-const char *ssid_wifi = "SFR_6CD0";
-const char *password_wifi = "4rselutockervolder";
+
+//const char *ssid_wifi="SFR_6CD0";
+//const char *password_wifi="fa4rckervolder";
 const char *ssid = "DOORLOCK001";
 const char *password = "password";  //at least 8 character long
+
+String ConnectionManagerClass::selectSsid(ConfigManagerClass config, int index)
+{
+	return config.readValueConfigFile("SSID", index);
+}
+
+String ConnectionManagerClass::selectPwd(ConfigManagerClass config, int index)
+{
+	return config.readValueConfigFile("PWD", index);
+}
 
 void ConnectionManagerClass::modeAccessPoint()
 {
@@ -16,21 +23,23 @@ void ConnectionManagerClass::modeAccessPoint()
 	Serial.println();
 
 	Serial.print("Server IP address: ");
+
 	Serial.println(WiFi.softAPIP());
 
 	Serial.print("Server MAC address: ");
 	Serial.println(WiFi.softAPmacAddress());
-
+	
 }
 
-void ConnectionManagerClass::modeAccessPointAndWifi()
+void ConnectionManagerClass::modeAccessPointAndWifi(String ssid_wifi,String password_wifi)
 {
 	int event;
 	int startMillis = millis();
 	int currentMillis;
 	WiFi.mode(WIFI_AP_STA);
 
-	WiFi.begin(ssid_wifi, password_wifi);
+	WiFi.begin(ssid_wifi.c_str(), password_wifi.c_str());
+	
 	Serial.println("");
 
 	// Wait for connection
@@ -116,4 +125,6 @@ void ConnectionManagerClass::modeOta()
 	Serial.println(WiFi.localIP());
 	Logger.Log(F("Ota Appearing Ok..."));
 }
+
+
 

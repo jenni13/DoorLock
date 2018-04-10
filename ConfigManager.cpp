@@ -22,7 +22,6 @@ String ConfigManagerClass::readConfigFile() // reading all the file if it exists
 
 	return s;
 }
-
 String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read value from key and index
 {
 	std::map<String, int> map = getIndex();
@@ -32,23 +31,26 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 		Serial.println("le chargement du fichier de configuration a échoué");
 
 	}
+	
 	String s,res,reponse;
+	//const char* valeur;
 	bool ok = false;
 	/*conversion*/
 	
 	int precedent = numero-1;
 	String m = String(precedent,DEC);
 
-	
 	if (numero == 0 || numero > map.at(key) )
 	{
 		reponse = "Mauvais index";
 		Serial.println(reponse);
+		//valeur = reponse.c_str();
 		return reponse;
 	}
-
+	
 	while (configFile.available())
 	{
+		
 		s = configFile.readStringUntil('\n');	
 		res = s.substring(0, s.indexOf(':'));
 		s = s.substring(s.indexOf(':') + 1, s.length());
@@ -65,6 +67,8 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 					{
 						s = s.substring(s.indexOf(':')+1, s.length());
 						reponse = s.substring(0, s.indexOf('.'));
+						//valeur = reponse.c_str();
+						
 						ok = true;
 					}
 					else
@@ -77,11 +81,15 @@ String ConfigManagerClass::readValueConfigFile(String key, int numero ) // read 
 			{
 				res = s.substring(0, s.indexOf('.'));
 				reponse = res.substring(res.indexOf(':') + 1, res.indexOf('.'));
+				//valeur = reponse.c_str();
+
 			}
 		}
 	}
 
 	configFile.close();
+	//Serial.print("fct ");
+	//Serial.println(valeur);
 	return reponse;
 
 }

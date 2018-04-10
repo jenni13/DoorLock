@@ -3,8 +3,7 @@
 
 //libraries used
 
-#include <FS.h> //SPIFFS
-//#include <ArduinoOTA.h>
+//#include <FS.h> //SPIFFS
 #include "Logger.h"
 #include "CommandManager.h"
 #include "ConfigManager.h"

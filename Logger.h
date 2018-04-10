@@ -18,12 +18,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef _LOGGER_h
 #define _LOGGER_h
 
+#define FILEERROR "./error.txt"
 // Set this flag to define active level
 // 0 => No Log
 // 1 => Error Log
 // 2 => Verbose Log
+// 3 => FileError
 #define ACTIVELOG 2
-
+#include <FS.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -80,6 +82,15 @@ public:
 
 	// logging mode state
 	bool IsLogging();
+	// print error in file String input
+	void toFile(String);
+	// print error in file char * input
+	void toFile(char* message);
+	// print error in file char  input
+	void toFile(char message);
+	// read file 
+	void readFerror();
+	
 };
 
 extern LoggerClass Logger;

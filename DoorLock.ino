@@ -29,8 +29,10 @@ void setup()
 	SPIFFS.begin();
 	if (configuration.itExist()) // mode access point only
 	{
-		connect.modeAccessPointAndWifi();
 		configuration.initIndex();
+		String ssid_wifi = connect.selectSsid(configuration, 1);
+		String pwd = connect.selectPwd(configuration, 1);
+		connect.modeAccessPointAndWifi(ssid_wifi,pwd);
 
 	}
 	else // wifi appairage and access point
@@ -54,37 +56,18 @@ void setup()
 	else
 	{
 		/*test*/
-		/*configuration.writeConfigFile("SSID", "abcdef");
-		configuration.writeConfigFile("SSID", "ghij");
+		/*configuration.writeConfigFile("SSID", "SFR_6CD0");
+		configuration.writeConfigFile("PWD","4rseluckervolder"),
 		configuration.writeConfigFile("NOM", "Jean");
-		configuration.writeConfigFile("NOM", "Bono");
-		configuration.writeConfigFile("SSID", "klm");
-		configuration.writeConfigFile("NOM", "Charly");
-		configuration.writeConfigFile("NOM", "Charles");
-		configuration.writeConfigFile("NUM", "04423");
-		configuration.writeConfigFile("NUM", "044");
+		configuration.writeConfigFile("NUM", "04423");*/
+
 
 
 		Serial.println("lecture fin:");
 		configuration.readConfigFile();
+		Serial.println("ssid");
+		configuration.readValueConfigFile("SSID", 1);
 
-		Serial.println("del:");
-		configuration.deleteValueConfigFile("SSID", "ghij");
-		Serial.println("afficher del:");
-		configuration.readConfigFile();
-		Serial.println("Je cherche 2");
-		String reponse = configuration.readValueConfigFile("NUM",1);
-		Serial.println(reponse);
-
-		configuration.deleteKeyConfigFile("SSID");
-		Serial.println("lecture fichier ssid supprime:");
-		configuration.readConfigFile();
-
-		configuration.deleteKeyConfigFile("PWD");
-
-		Serial.println("lecture fichier sans PWD:");*/
-		configuration.readConfigFile();
-		
 	}
 	SPIFFS.end();
 
